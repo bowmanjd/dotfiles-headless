@@ -1,0 +1,3 @@
+export MSSQL_CLI_SERVER="192.168.127.35"
+export MSSQL_CLI_DATABASE="Testerton"
+export MSSQL_CLI_USER="sa"
