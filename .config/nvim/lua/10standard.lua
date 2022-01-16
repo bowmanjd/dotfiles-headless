@@ -1,10 +1,6 @@
-local install_path = vim.fn.stdpath('data') .. '/site/pack/paqs/start/paq-nvim'
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.system({'git', 'clone', '--depth=1', 'https://github.com/savq/paq-nvim.git', install_path})
-end
-
-require 'paq' {
-  'savq/paq-nvim';                  -- Let Paq manage itself
+local PKGS = {
+  'bluz71/vim-moonfly-colors';
+  'savq/paq-nvim';
   'neovim/nvim-lspconfig';
   'nvim-lua/plenary.nvim';
   'nvim-telescope/telescope.nvim';
@@ -17,14 +13,49 @@ require 'paq' {
   'kyazdani42/nvim-web-devicons';
   'L3MON4D3/LuaSnip';
   'saadparwaiz1/cmp_luasnip';
-  'bluz71/vim-moonfly-colors';
   'lewis6991/gitsigns.nvim';
   'nvim-treesitter/nvim-treesitter';
   'onsails/lspkind-nvim';
-  -- 'lukas-reineke/indent-blankline.nvim';
+  'lukas-reineke/indent-blankline.nvim';
 }
 
-vim.cmd [[colorscheme moonfly]]
+local function clone_paq()
+	local path = vim.fn.stdpath('data') .. '/site/pack/paqs/start/paq-nvim'
+	if (vim.fn.empty(vim.fn.glob(path)) > 0) then
+		vim.fn.system {
+			'git',
+			'clone',
+			'--depth=1',
+			'https://github.com/savq/paq-nvim.git',
+			path
+		}
+	end
+end
+
+local function bootstrap_paq()
+	clone_paq()
+
+	-- Load Paq
+	vim.cmd('packadd paq-nvim')
+	local paq = require('paq')
+
+	-- Read and install packages
+	paq(PKGS)
+	paq.install()
+end
+
+local paq_status, paq = pcall(require, "paq")
+if(paq_status) then
+	paq(PKGS)
+else
+	bootstrap_paq()
+end
+
+local colo_status, colo_theme = pcall(vim.cmd, "colo moonfly")
+if (not colo_status) then
+	vim.cmd [[colorscheme torte]]
+end
+
 vim.opt.termguicolors = true
 
 local ll_status, lualine = pcall(require, "lualine")
