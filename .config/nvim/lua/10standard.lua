@@ -160,6 +160,7 @@ end
 local nullls_status, nullls = pcall(require, "null-ls")
 if(nullls_status) then
 	nullls.setup({
+		capabilities = capabilities,
 		on_attach = on_attach,
 		sources = {
 			require("null-ls").builtins.formatting.sqlformat.with({args = {'-d', '    '}}),
