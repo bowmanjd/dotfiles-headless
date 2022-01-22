@@ -113,7 +113,7 @@ if cmp_lsp_status and lspconfig_status then
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
-	lspconfig.eslint.setup({
+	lspconfig.quick_lint_js.setup({
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
