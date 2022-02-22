@@ -164,7 +164,7 @@ if nullls_status then
 	nullls.setup({
 		on_attach = on_attach,
 		sources = {
-			nullls.builtins.formatting.sqlformat.with({ args = { "-d", "    " } }),
+			nullls.builtins.formatting.sqlformat.with({ args = { "-ijd", "    " } }),
 			nullls.builtins.formatting.stylua,
 			nullls.builtins.formatting.reorder_python_imports,
 			nullls.builtins.formatting.black,
