@@ -169,7 +169,6 @@ if nullls_status then
 			nullls.builtins.formatting.reorder_python_imports,
 			nullls.builtins.formatting.black,
 			nullls.builtins.diagnostics.flake8,
-			-- nullls.builtins.completion.spell,
 		},
 	})
 end
