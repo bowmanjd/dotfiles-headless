@@ -8,4 +8,4 @@ if [ -f "$HOME/.gnupg/sshcontrol" ]; then
 fi
 
 export GPG_TTY=$(tty)
-gpg-connect-agent updatestartuptty /bye >/dev/null
+gpg-connect-agent -q updatestartuptty /bye >/dev/null
