@@ -17,6 +17,7 @@ local PKGS = {
 	"nvim-treesitter/nvim-treesitter",
 	"onsails/lspkind-nvim",
 	"lukas-reineke/indent-blankline.nvim",
+	"nanotee/sqls.nvim",
 }
 
 local function clone_paq()
@@ -148,6 +149,20 @@ if cmp_lsp_status and lspconfig_status then
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
+	lspconfig.sqls.setup({
+		capabilities = capabilities,
+		on_attach = function(client, bufnr)
+			vim.api.nvim_buf_set_keymap(
+				bufnr,
+				"n",
+				"<space>p",
+				"<cmd>%!sqlformat -ijd '    '<CR>",
+				{ noremap = true, silent = true }
+			)
+			on_attach(client, bufnr)
+			require("sqls").on_attach(client, bufnr)
+		end,
+	})
 end
 
 local lspkind_status, lspkind = pcall(require, "lspkind")
@@ -164,7 +179,7 @@ if nullls_status then
 	nullls.setup({
 		on_attach = on_attach,
 		sources = {
-			nullls.builtins.formatting.sqlformat.with({ args = { "-ijd", "    " } }),
+			-- nullls.builtins.formatting.sqlformat.with({ args = { "-ijd", "    " } }),
 			nullls.builtins.formatting.stylua,
 			nullls.builtins.formatting.reorder_python_imports,
 			nullls.builtins.formatting.black,
