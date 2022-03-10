@@ -25,6 +25,9 @@ local PKGS = {
 	-- "nanotee/sqls.nvim",
 }
 
+vim.g.db_ui_use_nerd_fonts = 1
+vim.g.db_ui_execute_on_save = 0
+
 local function clone_paq()
 	local path = vim.fn.stdpath("data") .. "/site/pack/paqs/start/paq-nvim"
 	if vim.fn.empty(vim.fn.glob(path)) > 0 then
@@ -123,6 +126,7 @@ if cmp_status then
 	})
 	cmp.setup.filetype("sql", {
 		sources = { { name = "vim-dadbod-completion" } },
+		{ { name = "buffer" } },
 	})
 end
 
