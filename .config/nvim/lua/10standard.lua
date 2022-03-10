@@ -4,6 +4,7 @@ local PKGS = {
 	"neovim/nvim-lspconfig",
 	"nvim-lua/plenary.nvim",
 	"nvim-telescope/telescope.nvim",
+	{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
 	"jose-elias-alvarez/null-ls.nvim",
 	"kosayoda/nvim-lightbulb",
 	"hrsh7th/cmp-nvim-lsp",
@@ -17,7 +18,11 @@ local PKGS = {
 	"nvim-treesitter/nvim-treesitter",
 	"onsails/lspkind-nvim",
 	"lukas-reineke/indent-blankline.nvim",
-	"nanotee/sqls.nvim",
+	"tpope/vim-dadbod",
+	"kristijanhusak/vim-dadbod-ui",
+	"kristijanhusak/vim-dadbod-completion",
+	"direnv/direnv.vim",
+	-- "nanotee/sqls.nvim",
 }
 
 local function clone_paq()
@@ -73,6 +78,21 @@ if ll_status then
 	})
 end
 
+local telescope_status, telescope = pcall(require, "telescope")
+if telescope_status then
+	telescope.setup({
+		extensions = {
+			fzf = {
+				fuzzy = true, -- false will only do exact matching
+				override_generic_sorter = true, -- override the generic sorter
+				override_file_sorter = true, -- override the file sorter
+				case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+			},
+		},
+	})
+	require("telescope").load_extension("fzf")
+end
+
 local gs_status, gitsigns = pcall(require, "gitsigns")
 if gs_status then
 	gitsigns.setup()
@@ -100,6 +120,9 @@ if cmp_status then
 		}, {
 			{ name = "buffer" },
 		}),
+	})
+	cmp.setup.filetype("sql", {
+		sources = { { name = "vim-dadbod-completion" } },
 	})
 end
 
@@ -149,20 +172,20 @@ if cmp_lsp_status and lspconfig_status then
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
-	lspconfig.sqls.setup({
-		capabilities = capabilities,
-		on_attach = function(client, bufnr)
-			vim.api.nvim_buf_set_keymap(
-				bufnr,
-				"n",
-				"<space>p",
-				"<cmd>%!sqlformat -ijd '    '<CR>",
-				{ noremap = true, silent = true }
-			)
-			on_attach(client, bufnr)
-			require("sqls").on_attach(client, bufnr)
-		end,
-	})
+	-- lspconfig.sqls.setup({
+	-- 	capabilities = capabilities,
+	-- 	on_attach = function(client, bufnr)
+	-- 		vim.api.nvim_buf_set_keymap(
+	-- 			bufnr,
+	-- 			"n",
+	-- 			"<space>p",
+	-- 			"<cmd>%!sqlformat -ijd '    '<CR>",
+	-- 			{ noremap = true, silent = true }
+	-- 		)
+	-- 		on_attach(client, bufnr)
+	-- 		require("sqls").on_attach(client, bufnr)
+	-- 	end,
+	-- })
 end
 
 local lspkind_status, lspkind = pcall(require, "lspkind")
@@ -179,7 +202,7 @@ if nullls_status then
 	nullls.setup({
 		on_attach = on_attach,
 		sources = {
-			-- nullls.builtins.formatting.sqlformat.with({ args = { "-ijd", "    " } }),
+			nullls.builtins.formatting.sqlformat.with({ args = { "-ijd", "    " } }),
 			nullls.builtins.formatting.stylua,
 			nullls.builtins.formatting.reorder_python_imports,
 			nullls.builtins.formatting.black,
