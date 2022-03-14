@@ -93,7 +93,10 @@ if telescope_status then
 			},
 		},
 	})
-	require("telescope").load_extension("fzf")
+	local fzf_status, fzf = pcall(require, "fzf_lib")
+	if fzf_status then
+		telescope.load_extension("fzf")
+	end
 end
 
 local gs_status, gitsigns = pcall(require, "gitsigns")
@@ -124,10 +127,13 @@ if cmp_status then
 			{ name = "buffer" },
 		}),
 	})
-	cmp.setup.filetype("sql", {
-		sources = { { name = "vim-dadbod-completion" } },
-		{ { name = "buffer" } },
-	})
+	local db_comp_status, db_comp = pcall(require, "vim_dadbod_completion")
+	if db_comp_status then
+		cmp.setup.filetype("sql", {
+			sources = { { name = "vim-dadbod-completion" } },
+			{ { name = "buffer" } },
+		})
+	end
 end
 
 local on_attach = function(client, bufnr)
