@@ -23,6 +23,7 @@ local PKGS = {
 	"kristijanhusak/vim-dadbod-completion",
 	"direnv/direnv.vim",
 	"alec-gibson/nvim-tetris",
+	"chrisbra/csv.vim",
 	-- "nanotee/sqls.nvim",
 }
 
