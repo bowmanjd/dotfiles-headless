@@ -180,6 +180,14 @@ if cmp_lsp_status and lspconfig_status then
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
+	lspconfig.yamlls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+	})
+	lspconfig.dockerls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+	})
 	lspconfig.quick_lint_js.setup({
 		capabilities = capabilities,
 		on_attach = on_attach,
