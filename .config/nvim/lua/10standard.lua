@@ -219,11 +219,20 @@ end
 
 local nullls_status, nullls = pcall(require, "null-ls")
 if nullls_status then
+	home = os.getenv("HOME")
 	nullls.setup({
 		on_attach = on_attach,
 		sources = {
-			nullls.builtins.formatting.sqlformat.with({ args = { "-ijd", "    " } }),
 			nullls.builtins.formatting.dprint.with({ filetypes = { "markdown", "toml" } }),
+			nullls.builtins.formatting.sqlformat.with({ args = { "-s", "4", "-m", "120", "-jd", "    " } }),
+			nullls.builtins.diagnostics.sqlfluff.with({
+				extra_args = {
+					"--config",
+					home .. "/devel/.sqlfluff",
+					"--dialect",
+					"tsql",
+				},
+			}),
 			nullls.builtins.formatting.stylua,
 			nullls.builtins.formatting.reorder_python_imports,
 			nullls.builtins.formatting.black,
