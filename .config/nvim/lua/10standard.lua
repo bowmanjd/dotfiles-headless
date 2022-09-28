@@ -223,10 +223,14 @@ if nullls_status then
 		on_attach = on_attach,
 		sources = {
 			nullls.builtins.formatting.sqlformat.with({ args = { "-ijd", "    " } }),
+			nullls.builtins.formatting.dprint.with({ filetypes = { "markdown", "toml" } }),
 			nullls.builtins.formatting.stylua,
 			nullls.builtins.formatting.reorder_python_imports,
 			nullls.builtins.formatting.black,
 			nullls.builtins.diagnostics.flake8,
+			nullls.builtins.diagnostics.eslint_d,
+			nullls.builtins.formatting.eslint_d,
+			nullls.builtins.code_actions.eslint_d,
 		},
 	})
 end
