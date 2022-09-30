@@ -224,6 +224,7 @@ if nullls_status then
 		on_attach = on_attach,
 		sources = {
 			nullls.builtins.formatting.sqlformat.with({ args = { "-s", "4", "-m", "120", "-d", "    " } }),
+			nullls.builtins.formatting.dprint.with({ filetypes = { "markdown", "toml" } }),
 			nullls.builtins.diagnostics.sqlfluff.with({
 				extra_args = {
 					"--config",
@@ -231,15 +232,14 @@ if nullls_status then
 					"--dialect",
 					"tsql",
 				},
-				--extra_args = { "--dialect", "tsql" },
 			}),
-			-- nullls.builtins.formatting.sqlfluff.with({
-			-- 	extra_args = { "--dialect", "tsql", "-f", "--exclude-rules", "L014,L031,L051,L061,L057" },
-			-- }),
 			nullls.builtins.formatting.stylua,
 			nullls.builtins.formatting.reorder_python_imports,
 			nullls.builtins.formatting.black,
 			nullls.builtins.diagnostics.flake8,
+			nullls.builtins.diagnostics.eslint_d,
+			nullls.builtins.formatting.eslint_d,
+			nullls.builtins.code_actions.eslint_d,
 		},
 	})
 end
