@@ -223,7 +223,7 @@ if nullls_status then
 	nullls.setup({
 		on_attach = on_attach,
 		sources = {
-			nullls.builtins.formatting.sqlformat.with({ args = { "-s", "4", "-m", "120", "-jd", "    " } }),
+			nullls.builtins.formatting.sqlformat.with({ args = { "-s", "4", "-m", "120", "-d", "    " } }),
 			nullls.builtins.diagnostics.sqlfluff.with({
 				extra_args = {
 					"--config",
