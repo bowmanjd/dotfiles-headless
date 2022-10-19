@@ -146,8 +146,9 @@ local on_attach = function(client, bufnr)
 		vim.api.nvim_buf_set_option(bufnr, ...)
 	end
 	local opts = { noremap = true, silent = true }
-	if client.resolved_capabilities.document_formatting then
-		buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+	if client.supports_method("textDocument/formatting") then
+		--buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+		buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
 		vim.cmd([[
 		augroup LspFormatting
 				autocmd! * <buffer>
@@ -162,7 +163,8 @@ end
 local cmp_lsp_status, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 local lspconfig_status, lspconfig = pcall(require, "lspconfig")
 if cmp_lsp_status and lspconfig_status then
-	local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+	-- local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+	local capabilities = cmp_nvim_lsp.default_capabilities()
 
 	lspconfig.bashls.setup({
 		capabilities = capabilities,
@@ -225,14 +227,14 @@ if nullls_status then
 		sources = {
 			nullls.builtins.formatting.sqlformat.with({ args = { "-s", "4", "-m", "120", "-d", "    " } }),
 			nullls.builtins.formatting.dprint.with({ filetypes = { "markdown", "toml" } }),
-			nullls.builtins.diagnostics.sqlfluff.with({
-				extra_args = {
-					"--config",
-					home .. "/devel/.sqlfluff",
-					"--dialect",
-					"tsql",
-				},
-			}),
+			-- nullls.builtins.diagnostics.sqlfluff.with({
+			-- 	extra_args = {
+			-- 		"--config",
+			-- 		home .. "/devel/.sqlfluff",
+			-- 		"--dialect",
+			-- 		"tsql",
+			-- 	},
+			-- }),
 			nullls.builtins.formatting.stylua,
 			nullls.builtins.formatting.reorder_python_imports,
 			nullls.builtins.formatting.black,
