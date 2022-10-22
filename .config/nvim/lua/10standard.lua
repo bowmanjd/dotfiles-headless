@@ -233,6 +233,8 @@ if nullls_status then
 					"tsql",
 				},
 			}),
+			nullls.builtins.formatting.prettierd.with({ filetypes = { "css", "scss" } }),
+			nullls.builtins.diagnostics.stylelint,
 			nullls.builtins.formatting.stylua,
 			nullls.builtins.formatting.reorder_python_imports,
 			nullls.builtins.formatting.black,
