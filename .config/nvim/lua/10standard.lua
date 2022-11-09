@@ -230,7 +230,7 @@ if nullls_status then
 			nullls.builtins.diagnostics.sqlfluff.with({
 				extra_args = {
 					"--config",
-					home .. "/devel/.sqlfluff",
+					home .. "/devel/sql/.sqlfluff",
 					"--dialect",
 					"tsql",
 				},
