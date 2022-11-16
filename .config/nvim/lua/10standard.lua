@@ -13,16 +13,16 @@ local PKGS = {
 	"nvim-lualine/lualine.nvim",
 	"kyazdani42/nvim-web-devicons",
 	"L3MON4D3/LuaSnip",
-	"saadparwaiz1/cmp_luasnip",
+	-- "saadparwaiz1/cmp_luasnip",
 	"lewis6991/gitsigns.nvim",
 	"nvim-treesitter/nvim-treesitter",
-	"onsails/lspkind-nvim",
+	--"onsails/lspkind-nvim",
 	"lukas-reineke/indent-blankline.nvim",
 	"tpope/vim-dadbod",
 	"kristijanhusak/vim-dadbod-ui",
 	"kristijanhusak/vim-dadbod-completion",
 	"direnv/direnv.vim",
-	"alec-gibson/nvim-tetris",
+	-- "alec-gibson/nvim-tetris",
 	"chrisbra/csv.vim",
 	-- "nanotee/sqls.nvim",
 }
@@ -110,18 +110,28 @@ end
 local cmp_status, cmp = pcall(require, "cmp")
 if cmp_status then
 	cmp.setup({
+		view = {
+			entries = "native",
+		},
 		snippet = {
 			expand = function(args)
 				require("luasnip").lsp_expand(args.body)
 			end,
 		},
-		mapping = {
+		mapping = cmp.mapping.preset.insert({
 			["<C-d>"] = cmp.mapping.scroll_docs(-4),
 			["<C-f>"] = cmp.mapping.scroll_docs(4),
 			["<C-Space>"] = cmp.mapping.complete(),
 			["<C-e>"] = cmp.mapping.close(),
 			["<CR>"] = cmp.mapping.confirm({ select = true }),
-		},
+			["<Tab>"] = function(fallback)
+				if cmp.visible() then
+					cmp.select_next_item()
+				else
+					fallback()
+				end
+			end,
+		}),
 		sources = cmp.config.sources({
 			{ name = "nvim_lsp" },
 			{ name = "luasnip" },
@@ -132,8 +142,25 @@ if cmp_status then
 	local db_comp_status, db_comp = pcall(require, "vim_dadbod_completion")
 	if db_comp_status then
 		cmp.setup.filetype("sql", {
-			sources = { { name = "vim-dadbod-completion" } },
-			{ { name = "buffer" } },
+			view = {
+				entries = "native",
+			},
+			snippet = {
+				expand = function(args)
+					require("luasnip").lsp_expand(args.body)
+				end,
+			},
+			mapping = cmp.mapping.preset.insert({
+				["<C-d>"] = cmp.mapping.scroll_docs(-4),
+				["<C-f>"] = cmp.mapping.scroll_docs(4),
+				["<C-Space>"] = cmp.mapping.complete(),
+				["<C-e>"] = cmp.mapping.close(),
+				["<CR>"] = cmp.mapping.confirm({ select = true }),
+			}),
+			sources = cmp.config.sources(
+				{ { name = "vim-dadbod-completion" }, { name = "luasnip" } },
+				{ { name = "buffer" } }
+			),
 		})
 	end
 end
@@ -152,7 +179,7 @@ local on_attach = function(client, bufnr)
 		vim.cmd([[
 		augroup LspFormatting
 				autocmd! * <buffer>
-				autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+				autocmd BufWritePre <buffer> lua vim.lsp.buf.format({ async = false })
 		augroup END
 		]])
 	end
@@ -163,7 +190,6 @@ end
 local cmp_lsp_status, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 local lspconfig_status, lspconfig = pcall(require, "lspconfig")
 if cmp_lsp_status and lspconfig_status then
-	-- local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 	local capabilities = cmp_nvim_lsp.default_capabilities()
 
 	lspconfig.bashls.setup({
@@ -194,20 +220,6 @@ if cmp_lsp_status and lspconfig_status then
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
-	-- lspconfig.sqls.setup({
-	-- 	capabilities = capabilities,
-	-- 	on_attach = function(client, bufnr)
-	-- 		vim.api.nvim_buf_set_keymap(
-	-- 			bufnr,
-	-- 			"n",
-	-- 			"<space>p",
-	-- 			"<cmd>%!sqlformat -ijd '    '<CR>",
-	-- 			{ noremap = true, silent = true }
-	-- 		)
-	-- 		on_attach(client, bufnr)
-	-- 		require("sqls").on_attach(client, bufnr)
-	-- 	end,
-	-- })
 end
 
 local lspkind_status, lspkind = pcall(require, "lspkind")
