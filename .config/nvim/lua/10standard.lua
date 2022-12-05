@@ -176,12 +176,12 @@ local on_attach = function(client, bufnr)
 	if client.supports_method("textDocument/formatting") then
 		--buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 		buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
-		vim.cmd([[
-		augroup LspFormatting
-				autocmd! * <buffer>
-				autocmd BufWritePre <buffer> lua vim.lsp.buf.format({ async = false })
-		augroup END
-		]])
+		-- vim.cmd([[
+		-- augroup LspFormatting
+		-- 		autocmd! * <buffer>
+		-- 		autocmd BufWritePre <buffer> lua vim.lsp.buf.format({ async = false })
+		-- augroup END
+		-- ]])
 	end
 	buf_set_keymap("n", "<space>]", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
 end
@@ -237,7 +237,7 @@ if nullls_status then
 	nullls.setup({
 		on_attach = on_attach,
 		sources = {
-			nullls.builtins.formatting.sqlformat.with({ args = { "-s", "4", "-m", "120", "-d", "    " } }),
+			nullls.builtins.formatting.sqlformat.with({ args = { "-s", "4", "-m", "100", "-d", "    " } }),
 			nullls.builtins.formatting.dprint.with({ filetypes = { "markdown", "toml" } }),
 			nullls.builtins.diagnostics.sqlfluff.with({
 				extra_args = {
