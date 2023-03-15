@@ -200,6 +200,15 @@ if cmp_lsp_status and lspconfig_status then
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
+	lspconfig.rust_analyzer.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		settings = {
+			checkOnSave = {
+				command = "clippy",
+			},
+		},
+	})
 	lspconfig.jsonls.setup({
 		capabilities = capabilities,
 		on_attach = on_attach,
