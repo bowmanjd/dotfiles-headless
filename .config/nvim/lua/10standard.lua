@@ -200,6 +200,14 @@ if cmp_lsp_status and lspconfig_status then
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
+	lspconfig.gopls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+	})
+	lspconfig.golangci_lint_ls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+	})
 	lspconfig.rust_analyzer.setup({
 		capabilities = capabilities,
 		on_attach = on_attach,
