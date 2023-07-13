@@ -30,6 +30,8 @@ local PKGS = {
 vim.g.db_ui_use_nerd_fonts = 1
 vim.g.db_ui_execute_on_save = 0
 
+vim.api.nvim_buf_set_keymap(0, 'n', '<Space>F', ":%!sqlf<CR>", { noremap = true, silent = true } )
+
 local function clone_paq()
 	local path = vim.fn.stdpath("data") .. "/site/pack/paqs/start/paq-nvim"
 	if vim.fn.empty(vim.fn.glob(path)) > 0 then
@@ -254,9 +256,19 @@ if nullls_status then
 	nullls.setup({
 		on_attach = on_attach,
 		sources = {
-			nullls.builtins.formatting.sqlformat.with({ args = { "-s", "4", "-m", "100", "-d", "    " } }),
+			-- nullls.builtins.formatting.sqlformat.with({ args = { "-s", "4", "-m", "150", "-d", "    " } }),
 			nullls.builtins.formatting.dprint.with({ filetypes = { "markdown", "toml" } }),
+			nullls.builtins.formatting.sqlfluff.with({
+                timeout_ms = 60000,
+				extra_args = {
+					"--config",
+					home .. "/devel/sql/.sqlfluff",
+					"--dialect",
+					"tsql",
+				},
+			}),
 			nullls.builtins.diagnostics.sqlfluff.with({
+                timeout_ms = 10000,
 				extra_args = {
 					"--config",
 					home .. "/devel/sql/.sqlfluff",
